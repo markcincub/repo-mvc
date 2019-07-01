@@ -35,7 +35,7 @@ namespace Microsoft.eShopWeb.Web
                     logger.LogError(ex, "An error occurred seeding the DB.");
                 }
             }
-
+            // run the host
             host.Run();
         }
 
