@@ -1,11 +1,13 @@
 ﻿using Microsoft.eShopWeb.Web;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Xunit;
+//using Xunit;
+using NUnit.Framework;
 
 namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
 {
-    public class CatalogControllerIndex : IClassFixture<CustomWebApplicationFactory<Startup>>
+    [TestFixture]
+    public class CatalogControllerIndex //: IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         public CatalogControllerIndex(CustomWebApplicationFactory<Startup> factory)
         {
@@ -14,7 +16,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
 
         public HttpClient Client { get; }
 
-        [Fact]
+        [Test]
         public async Task ReturnsHomePageWithProductListing()
         {
             // Arrange & Act
@@ -23,7 +25,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.Contains(".NET Bot Black Sweatshirt", stringResponse);
+            Assert.That(stringResponse.Contains(".NET Bot Black Sweatshirt"));
         }
     }
 }

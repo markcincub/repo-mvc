@@ -2,11 +2,13 @@
 using Microsoft.eShopWeb.Web;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Xunit;
+//using Xunit;
+using NUnit.Framework;
 
 namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
 {
-    public class HomePageOnGet : IClassFixture<CustomWebApplicationFactory<Startup>>
+    [TestFixture]
+    public class HomePageOnGet //: IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         public HomePageOnGet(CustomWebApplicationFactory<Startup> factory)
         {
@@ -15,7 +17,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
 
         public HttpClient Client { get; }
 
-        [Fact]
+        [Test]
         public async Task ReturnsHomePageWithProductListing()
         {
             // Arrange & Act
@@ -24,7 +26,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
             var stringResponse = await response.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.Contains(".NET Bot Black Sweatshirt", stringResponse);
+            Assert.That(stringResponse.Contains(".NET Bot Black Sweatshirt"));
         }
     }
 }

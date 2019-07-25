@@ -7,11 +7,13 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Xunit;
+//using Xunit;
+using NUnit.Framework;
 
 namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
 {
-    public class BasketPageCheckout : IClassFixture<CustomWebApplicationFactory<Startup>>
+    [TestFixture]
+    public class BasketPageCheckout //: IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         public BasketPageCheckout(CustomWebApplicationFactory<Startup> factory)
         {
@@ -31,7 +33,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
             return match.Groups.LastOrDefault().Value;
         }
 
-        [Fact]
+        [Test]
         public async Task RedirectsToLoginIfNotAuthenticated()
         {
             // Arrange & Act
@@ -58,14 +60,14 @@ namespace Microsoft.eShopWeb.FunctionalTests.WebRazorPages
             var stringResponse = await postResponse.Content.ReadAsStringAsync();
 
             // Assert
-            Assert.Contains(".NET Black &amp; White Mug", stringResponse);
+            Assert.That(stringResponse.Contains(".NET Black &amp; White Mug"));
 
             keyValues.Clear();
             keyValues.Add(new KeyValuePair<string, string>("__RequestVerificationToken", token));
 
             formContent = new FormUrlEncodedContent(keyValues);
             var postResponse2 = await Client.PostAsync("/Basket/Checkout", formContent);
-            Assert.Contains("/Identity/Account/Login", postResponse2.RequestMessage.RequestUri.ToString());
+            Assert.That(postResponse2.RequestMessage.RequestUri.ToString().Contains("/Identity/Account/Login"));
         }
     }
 }

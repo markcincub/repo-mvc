@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.eShopWeb.Web;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,12 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Xunit;
+
 
 namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
 {
-    public class AccountControllerSignIn : IClassFixture<CustomWebApplicationFactory<Startup>>
+    [TestFixture]
+    public class AccountControllerSignIn  //: IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         public AccountControllerSignIn(CustomWebApplicationFactory<Startup> factory)
         {
@@ -23,17 +25,17 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
 
         public HttpClient Client { get; }
 
-        [Fact]
+        [Test]
         public async Task ReturnsSignInScreenOnGet()
         {
             var response = await Client.GetAsync("/identity/account/login");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
 
-            Assert.Contains("demouser@microsoft.com", stringResponse);
+            Assert.That(stringResponse.Contains("demouser@microsoft.com"));
         }
 
-        [Fact]
+        [Test]
         public void RegexMatchesValidRequestVerificationToken()
         {
             // TODO: Move to a unit test
@@ -47,7 +49,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
             Assert.True(group.Value.Length > 50);
         }
 
-        [Fact]
+        [Test]
         public async Task ReturnsFormWithRequestVerificationToken()
         {
             var response = await Client.GetAsync("/identity/account/login");
@@ -66,7 +68,7 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
             return match.Groups.LastOrDefault().Value;
         }
 
-        [Fact]
+        [Test]
         public async Task ReturnsSuccessfulSignInOnPostWithValidCredentials()
         {
             var getResponse = await Client.GetAsync("/identity/account/login");
@@ -82,8 +84,8 @@ namespace Microsoft.eShopWeb.FunctionalTests.Web.Controllers
             var formContent = new FormUrlEncodedContent(keyValues);
 
             var postResponse = await Client.PostAsync("/identity/account/login", formContent);
-            Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
-            Assert.Equal(new System.Uri("/", UriKind.Relative), postResponse.Headers.Location);
+            Assert.AreEqual(HttpStatusCode.Redirect, postResponse.StatusCode);
+            Assert.AreEqual(new System.Uri("/", UriKind.Relative), postResponse.Headers.Location);
         }
     }
 }
